@@ -1,0 +1,62 @@
+# BAD Dockerfile — работает, но нарушает best practices
+
+# Плохая практика 1: используем `latest`, что делает сборку недетерминированной
+FROM nginx:latest
+
+# Плохая практика 2: устанавливаем все зависимости и собираем в одном слое,
+# не используем многоступенчатую сборку → build-инструменты остаются в образе
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libpcre2-dev \
+    zlib1g-dev \
+    libssl-dev \
+    libxslt1-dev \
+    libgd-dev \
+    libgeoip-dev \
+    wget \
+    git \
+    curl \
+    && \
+    # Получаем версию nginx "на лету"
+    NGINX_VERSION=$(nginx -v 2>&1 | sed -n 's/.*nginx\/\([0-9.]*\).*/\1/p') && \
+    cd /tmp && \
+    # Скачиваем исходники без проверки целостности
+    curl -fSL https://nginx.org/download/nginx-$NGINX_VERSION.tar.gz | tar zx && \
+    # Клонируем модуль без фиксации коммита → Плохая практика 3
+    git clone https://github.com/vozlt/nginx-module-vts.git && \
+    cd nginx-$NGINX_VERSION && \
+    # Собираем nginx с базовой конфигурацией
+    ./configure \
+        --prefix=/etc/nginx \
+        --sbin-path=/usr/sbin/nginx \
+        --modules-path=/usr/lib/nginx/modules \
+        --conf-path=/etc/nginx/nginx.conf \
+        --error-log-path=/var/log/nginx/error.log \
+        --http-log-path=/var/log/nginx/access.log \
+        --pid-path=/var/run/nginx.pid \
+        --lock-path=/var/run/nginx.lock \
+        --http-client-body-temp-path=/var/cache/nginx/client_temp \
+        --http-proxy-temp-path=/var/cache/nginx/proxy_temp \
+        --http-fastcgi-temp-path=/var/cache/nginx/fastcgi_temp \
+        --user=nginx \
+        --group=nginx \
+        --with-http_ssl_module \
+        --with-http_v2_module \
+        --with-stream \
+        --add-module=/tmp/nginx-module-vts && \
+    make -j$(nproc) && make install && \
+    # Не удаляем зависимости → Плохая практика 4
+    # Оставляем gcc, git, make и т.д. в финальном образе
+    echo "Build complete"
+
+# Копируем наш конфиг поверх стандартного
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# Не создаём временные директории — надеемся, что nginx сам справится
+
+# Не создаём пользователя nginx — запускаем от root → Плохая практика 5
+
+EXPOSE 80 443
+
+# Запуск от root (по умолчанию в debian-based nginx)
+CMD ["nginx", "-g", "daemon off;"]
