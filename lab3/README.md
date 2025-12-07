@@ -60,7 +60,7 @@ lab3/
 
 ### Доступ к веб-интерфейсу
 
-1. Пробросить сервис: `minikube service nextcloud-service --url` (команда откроет URL или предоставит ссылку вида `http://127.0.0.1:XXXXX`).
+1. Пробросить сервис: `kubectl port-forward svc/nextcloud-service 8080:80`. Перейти по адресу `http://127.0.0.1:8080/login`
 2. Перейти в браузере по выданному адресу.  
 3. Авторизоваться логином `admin` (или указанным в ConfigMap) и паролем из `nextcloud-secret.yaml`.
 
@@ -80,8 +80,23 @@ minikube stop
 2. **Что произойдёт при масштабировании Postgres в 0, затем обратно в 1 и повторной попытке войти в Nextcloud?**  
    При масштабировании до 0 удаляются все поды Postgres, соединение рвётся, Nextcloud переходит в состояние ошибок БД. После возврата реплик к 1 новый под восстановится, но при первом входе Nextcloud может потребовать время на переподключение; сессия станет доступной после того, как приложение повторно установит соединение с БД. Данные не потеряются, потому что в сценарии используется тот же Secret и конфигурация; однако при отсутствии постоянного хранилища (PV/PVC) данные БД будут потеряны, поэтому в продуктиве важно подключать персистентные тома.
 
-## Замечания по дальнейшему развитию
+## Скриншоты логов
 
-- Добавить `PersistentVolumeClaim` для Postgres и Nextcloud (хранилище файлов).
-- Вынести общие значения (например, домены) в отдельный `ConfigMap` и добавить шаблонизацию Helm/Kustomize.
-- Настроить Ingress вместо NodePort, когда среда это позволяет.
+Запуск
+![telegram-cloud-photo-size-2-5307933310292004172-y](https://github.com/user-attachments/assets/42d5394d-ae77-465c-b455-62c1b40b894d)
+
+Проверка подов
+<img width="1580" height="146" alt="telegram-cloud-document-2-5307933309832038450" src="https://github.com/user-attachments/assets/0c27d0b2-70dd-4695-9a4c-2e50dcd4daff" />
+
+Проброс порта
+![telegram-cloud-photo-size-2-5307933310292004173-y](https://github.com/user-attachments/assets/3ffcf846-b581-418a-a765-a9152695708d)
+
+Скриншот из самого клауда
+![telegram-cloud-photo-size-2-5307933310292004164-y](https://github.com/user-attachments/assets/87ba70bf-f0d6-409f-8c63-d899d58017e3)
+
+Другие скриншоты и команды
+<img width="754" height="87" alt="image" src="https://github.com/user-attachments/assets/8df2b26e-1792-4896-b6d5-af7ec64610ca" />
+
+<img width="792" height="895" alt="image" src="https://github.com/user-attachments/assets/9ab7a028-4991-4c10-9e6b-0ec8affc8a3d" />
+
+<img width="973" height="283" alt="image" src="https://github.com/user-attachments/assets/2cc7a443-85f3-4f3a-b49d-758448eabe0f" />
