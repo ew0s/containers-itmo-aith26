@@ -47,20 +47,29 @@ spec:
             httpGet:
               path: /status.php
               port: http
-            initialDelaySeconds: 60
-            periodSeconds: 15
-            failureThreshold: 4
+              httpHeaders:
+                - name: Host
+                  value: 127.0.0.1
+            initialDelaySeconds: 120
+            periodSeconds: 20
+            failureThreshold: 6
           livenessProbe:
             httpGet:
               path: /status.php
               port: http
-            initialDelaySeconds: 90
+              httpHeaders:
+                - name: Host
+                  value: 127.0.0.1
+            initialDelaySeconds: 240
             periodSeconds: 30
             failureThreshold: 4
           startupProbe:
             httpGet:
               path: /status.php
               port: http
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            failureThreshold: 12
+              httpHeaders:
+                - name: Host
+                  value: 127.0.0.1
+            initialDelaySeconds: 90
+            periodSeconds: 15
+            failureThreshold: 24
