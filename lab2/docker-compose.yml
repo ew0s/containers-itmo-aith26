@@ -1,0 +1,93 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: lab2_db
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    networks:
+      - lab2_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  init-db:
+    build:
+      context: .
+      dockerfile: services/init-db/Dockerfile
+    container_name: lab2_init
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file: .env
+    networks:
+      - lab2_net
+    command: ["upgrade", "head"]
+    restart: "no"
+
+  llm:
+    build:
+      context: .
+      dockerfile: services/llm/Dockerfile
+    container_name: lab2_llm
+    depends_on:
+      init-db:
+        condition: service_completed_successfully
+    env_file: .env
+    networks:
+      - lab2_net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/healthz"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  gateway:
+    build:
+      context: .
+      dockerfile: services/gateway/Dockerfile
+    container_name: lab2_gateway
+    depends_on:
+      init-db:
+        condition: service_completed_successfully
+      llm:
+        condition: service_healthy
+    env_file: .env
+    environment:
+      LLM_SERVICE_URL: http://llm:9000
+    networks:
+      - lab2_net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/healthz"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  tg-bot:
+    build:
+      context: .
+      dockerfile: services/tg-bot/Dockerfile
+    container_name: lab2_bot
+    depends_on:
+      gateway:
+        condition: service_healthy
+    env_file: .env
+    environment:
+      GATEWAY_URL: http://gateway:8080
+    networks:
+      - lab2_net
+    restart: unless-stopped
+
+volumes:
+  pg_data:
+
+networks:
+  lab2_net:
+    name: lab2_net

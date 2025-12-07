@@ -1,0 +1,15 @@
+[project]
+name = "lab2-init-db"
+version = "0.1.0"
+description = "Init сервис для применения миграций БД"
+requires-python = ">=3.11"
+authors = [ { name = "ITMO Containers" } ]
+dependencies = [
+    "alembic>=1.13.1,<1.14",
+    "sqlalchemy[asyncio]>=2.0.30,<2.1",
+    "asyncpg>=0.29.0,<0.30",
+    "pydantic-settings>=2.2.1,<2.3",
+]
+
+[tool.uv]
+managed = true
