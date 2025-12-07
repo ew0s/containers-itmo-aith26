@@ -1,0 +1,7 @@
+.env
+.env.local
+*.log
+__pycache__/
+uv.lock
+**/.ruff_cache/
+**/.mypy_cache/
