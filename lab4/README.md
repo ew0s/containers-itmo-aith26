@@ -113,25 +113,29 @@ kubectl delete namespace lab4 --ignore-not-found
 
 ## Скриншоты
 
-**Билд контейнеров внутри minikube **
+**Билд контейнеров внутри minikube**
 
 <img width="971" height="935" alt="image" src="https://github.com/user-attachments/assets/1bae6d89-c8b1-45cd-92d9-41787ab8cd17" />
 
 **Манифесты**
+
 <img width="1002" height="117" alt="image" src="https://github.com/user-attachments/assets/dbf40fd3-cf43-4855-adfc-860e5e3ba99f" />
 
 **Статус Подов**
-<img width="831" height="102" alt="image" src="https://github.com/user-attachments/assets/690818ca-c1e4-4cc4-8ed0-09161efb6183" />
 
+<img width="831" height="102" alt="image" src="https://github.com/user-attachments/assets/690818ca-c1e4-4cc4-8ed0-09161efb6183" />
 <img width="820" height="100" alt="image" src="https://github.com/user-attachments/assets/224f1682-1343-4b94-aeba-41419adfedae" />
 
 **Лог гейтвея**
+
 <img width="923" height="118" alt="image" src="https://github.com/user-attachments/assets/7ee6d146-1602-4f0d-afd5-f2fe3b79bbb9" />
 
 **Лог ТГ Бота**
+
 <img width="1010" height="115" alt="image" src="https://github.com/user-attachments/assets/5a83d1ef-ea7f-4708-9fe3-fec126f73180" />
 
 **Удаление и очистка**
+
 <img width="1015" height="254" alt="image" src="https://github.com/user-attachments/assets/64f33186-bc15-4fb0-a171-8a654c095bb5" />
 
 **Локальынй вызов**
