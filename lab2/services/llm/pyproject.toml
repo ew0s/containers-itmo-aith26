@@ -1,0 +1,16 @@
+[project]
+name = "lab2-llm"
+version = "0.1.0"
+description = "LLM сервис на основе Mistral + LangChain"
+requires-python = ">=3.11"
+authors = [ { name = "ITMO Containers" } ]
+dependencies = [
+    "fastapi>=0.111.0,<0.112",
+    "uvicorn>=0.30.1,<0.31",
+    "pydantic-settings>=2.2.1,<2.3",
+    "langchain>=0.2.1,<0.3",
+    "langchain-mistralai>=0.1.5,<0.2",
+]
+
+[tool.uv]
+managed = true
