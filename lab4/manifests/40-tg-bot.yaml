@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tg-bot
+  namespace: lab4
+  labels:
+    lab: lab4
+    app: tg-bot
+    tier: bot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      lab: lab4
+      app: tg-bot
+  template:
+    metadata:
+      labels:
+        lab: lab4
+        app: tg-bot
+        tier: bot
+        component: tg-bot
+    spec:
+      containers:
+        - name: tg-bot
+          image: lab4/tg-bot:latest
+          imagePullPolicy: IfNotPresent
+          command:
+            - /bin/sh
+            - -c
+            - |
+              if [ "${BOT_TOKEN}" = "123456789:TEST_TOKEN_PLACEHOLDER" ]; then
+                echo "BOT_TOKEN is a placeholder. Update lab4-secrets to start polling."
+                sleep infinity
+              else
+                exec python -m bot.main
+              fi
+          env:
+            - name: BOT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: lab4-secrets
+                  key: BOT_TOKEN
+          envFrom:
+            - configMapRef:
+                name: lab4-tg-bot-config
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+
