@@ -111,11 +111,29 @@ kubectl delete -f lab4/manifests --ignore-not-found
 kubectl delete namespace lab4 --ignore-not-found
 ```
 
-## Полезные команды
+## Скриншоты
 
-- `kubectl logs -n lab4 deployment/gateway -f`
-- `kubectl describe pod -n lab4 <pod-name>`
-- `kubectl run -n lab4 psql --rm -it --image=postgres:16-alpine --env="PGPASSWORD=..." -- psql -h postgres-service -U lab4_user lab4_app`
+**Билд контейнеров внутри minikube **
 
-Документ `lab4.txt` содержит распознанный текст методички `lab4.pdf` для быстрого поиска.
+<img width="971" height="935" alt="image" src="https://github.com/user-attachments/assets/1bae6d89-c8b1-45cd-92d9-41787ab8cd17" />
 
+**Манифесты**
+<img width="1002" height="117" alt="image" src="https://github.com/user-attachments/assets/dbf40fd3-cf43-4855-adfc-860e5e3ba99f" />
+
+**Статус Подов**
+<img width="831" height="102" alt="image" src="https://github.com/user-attachments/assets/690818ca-c1e4-4cc4-8ed0-09161efb6183" />
+
+<img width="820" height="100" alt="image" src="https://github.com/user-attachments/assets/224f1682-1343-4b94-aeba-41419adfedae" />
+
+**Лог гейтвея**
+<img width="923" height="118" alt="image" src="https://github.com/user-attachments/assets/7ee6d146-1602-4f0d-afd5-f2fe3b79bbb9" />
+
+**Лог ТГ Бота**
+<img width="1010" height="115" alt="image" src="https://github.com/user-attachments/assets/5a83d1ef-ea7f-4708-9fe3-fec126f73180" />
+
+**Удаление и очистка**
+<img width="1015" height="254" alt="image" src="https://github.com/user-attachments/assets/64f33186-bc15-4fb0-a171-8a654c095bb5" />
+
+**Локальынй вызов**
+<img width="1081" height="149" alt="image" src="https://github.com/user-attachments/assets/00774cd5-07cb-4417-8304-0d5328449401" /> 
+<img width="1710" height="87" alt="image" src="https://github.com/user-attachments/assets/e52be608-9fa6-4453-abdb-1d8a1c674592" />
