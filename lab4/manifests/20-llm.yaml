@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: llm
+  namespace: lab4
+  labels:
+    lab: lab4
+    app: llm
+    tier: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: llm
+      lab: lab4
+  template:
+    metadata:
+      labels:
+        app: llm
+        lab: lab4
+        tier: backend
+        component: llm
+    spec:
+      containers:
+        - name: llm
+          image: lab4/llm:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: MISTRAL_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: lab4-secrets
+                  key: MISTRAL_API_KEY
+            - name: LOG_LEVEL
+              valueFrom:
+                configMapKeyRef:
+                  name: lab4-llm-config
+                  key: LOG_LEVEL
+            - name: MISTRAL_MODEL
+              valueFrom:
+                configMapKeyRef:
+                  name: lab4-llm-config
+                  key: MISTRAL_MODEL
+            - name: LLM_MAX_ITEMS
+              valueFrom:
+                configMapKeyRef:
+                  name: lab4-llm-config
+                  key: LLM_MAX_ITEMS
+          ports:
+            - name: http
+              containerPort: 9000
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 20
+            periodSeconds: 15
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 40
+            periodSeconds: 20
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: llm-service
+  namespace: lab4
+  labels:
+    lab: lab4
+    app: llm
+    tier: backend
+spec:
+  selector:
+    app: llm
+    lab: lab4
+  ports:
+    - name: http
+      port: 9000
+      targetPort: http
+
