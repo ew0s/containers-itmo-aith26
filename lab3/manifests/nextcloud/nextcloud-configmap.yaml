@@ -9,6 +9,4 @@ data:
   ALLOW_EMPTY_PASSWORD: "no"
   POSTGRES_HOST: "postgres-service"
   POSTGRES_DB: "postgres"
-  POSTGRES_USER: "postgres"
   NEXTCLOUD_TRUSTED_DOMAINS: "127.0.0.1 nextcloud-service"
-  NEXTCLOUD_ADMIN_USER: "admin"
